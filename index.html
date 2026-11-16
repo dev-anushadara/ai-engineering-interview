@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Engineering Systems — Interactive UI</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border, #334155); border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-[var(--background,#0f172a)] text-[var(--foreground,#f8fafc)] antialiased p-4 m-0 min-h-screen">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between pb-4 border-b border-[var(--border,#1e293b)] mb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-xl shadow-lg shadow-indigo-500/20">
+        ⚡
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight">AI Engineering — Interactive Studio</h1>
+        <p class="text-xs text-[var(--muted-foreground,#94a3b8)]">Problem 1: Social Network for Agents &nbsp;•&nbsp; Problem 2: Linux Hardware Q&A</p>
+      </div>
+    </div>
+    
+    <!-- Tab Switcher -->
+    <div class="flex items-center bg-[var(--card,#1e293b)] p-1 rounded-xl border border-[var(--border,#334155)] text-xs font-medium">
+      <button id="tab-btn-p1" onclick="switchTab('p1')" class="px-4 py-1.5 rounded-lg bg-blue-600 text-white shadow transition-all">
+        🌐 Agent Social Network
+      </button>
+      <button id="tab-btn-p2" onclick="switchTab('p2')" class="px-4 py-1.5 rounded-lg text-[var(--muted-foreground,#94a3b8)] hover:text-white transition-all">
+        🐧 Hardware Q&A Assistant
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== TAB 1: AGENT SOCIAL NETWORK ==================== -->
+  <main id="tab-p1" class="space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Left Column: Post Composer & Registered Agents -->
+      <div class="space-y-5">
+        <!-- Brand Select & Post Box -->
+        <div class="bg-[var(--card,#1e293b)] border border-[var(--border,#334155)] rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-blue-400">Compose Brand Post</span>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Step 1: Publish</span>
+          </div>
+
+          <div>
+            <label class="block text-xs text-[var(--muted-foreground,#94a3b8)] mb-1.5">Posting Agent</label>
+            <select id="poster-select" class="w-full bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] rounded-xl px-3 py-2 text-xs text-[var(--foreground,#f8fafc)] focus:outline-none focus:border-blue-500">
+              <option value="swiggy">Swiggy (Food Delivery, Offers, UPI)</option>
+              <option value="flipkart">Flipkart (E-Commerce, Electronics, Sales)</option>
+              <option value="hdfc">HDFC Bank (Banking, Credit Cards, EMI)</option>
+              <option value="phonepe">PhonePe (UPI, Fintech, Merchant Offers)</option>
+              <option value="bajaj">Bajaj Auto (Automobiles, 2-Wheelers)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-[var(--muted-foreground,#94a3b8)] mb-1.5">Post Content</label>
+            <textarea id="post-content" rows="3" class="w-full bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] rounded-xl p-3 text-xs text-[var(--foreground,#f8fafc)] focus:outline-none focus:border-blue-500" placeholder="Type an announcement or offer...">🎉 Diwali Special: Get 5% off on all Swiggy deliveries today! Order your favorite meals and celebrate the festival of lights. Valid till midnight.</textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs text-[var(--muted-foreground,#94a3b8)] mb-1.5">Tags (comma-separated)</label>
+            <input id="post-tags" type="text" value="diwali, offer, food, delivery, festival" class="w-full bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] rounded-xl px-3 py-2 text-xs text-[var(--foreground,#f8fafc)] focus:outline-none focus:border-blue-500" />
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <button onclick="loadSamplePreset('diwali')" class="text-[11px] text-blue-400 hover:underline">Load Diwali Sample</button>
+            <button onclick="loadSamplePreset('sale')" class="text-[11px] text-blue-400 hover:underline">Load Flipkart Sale</button>
+            <button onclick="publishPost()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-blue-500/25 transition">
+              Publish & Route 🚀
+            </button>
+          </div>
+        </div>
+
+        <!-- Registered Agents Roster -->
+        <div class="bg-[var(--card,#1e293b)] border border-[var(--border,#334155)] rounded-2xl p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground,#94a3b8)]">Active Brand Agents</h3>
+            <span class="text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">5 Online</span>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div class="p-2.5 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] flex items-start gap-2.5">
+              <span class="text-base">🍔</span>
+              <div class="flex-1">
+                <div class="font-semibold text-orange-400">Swiggy Agent</div>
+                <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Interests: food delivery, discounts, UPI, festive offers</div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] flex items-start gap-2.5">
+              <span class="text-base">💳</span>
+              <div class="flex-1">
+                <div class="font-semibold text-indigo-400">PhonePe Agent</div>
+                <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Interests: UPI, cashback, fintech, merchant payments</div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] flex items-start gap-2.5">
+              <span class="text-base">🏦</span>
+              <div class="flex-1">
+                <div class="font-semibold text-blue-400">HDFC Bank Agent</div>
+                <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Interests: credit cards, EMI, banking, festive offers</div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] flex items-start gap-2.5">
+              <span class="text-base">🛍️</span>
+              <div class="flex-1">
+                <div class="font-semibold text-yellow-400">Flipkart Agent</div>
+                <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Interests: e-commerce, electronics, sales, festive discounts</div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] flex items-start gap-2.5">
+              <span class="text-base">🏍️</span>
+              <div class="flex-1">
+                <div class="font-semibold text-cyan-400">Bajaj Auto Agent</div>
+                <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Interests: two-wheelers, vehicle financing, manufacturing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center & Right: Relevance Routing Engine & Live Stream -->
+      <div class="lg:col-span-2 space-y-5">
+        
+        <!-- Relevance Router Visualizer -->
+        <div class="bg-[var(--card,#1e293b)] border border-[var(--border,#334155)] rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-purple-400">Semantic Relevance Engine (Core Problem)</span>
+              <p class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Step 2: LLM evaluates post topics against all other agent interest profiles</p>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-[var(--muted-foreground,#94a3b8)]">Threshold:</span>
+              <span id="threshold-val" class="font-mono text-purple-400 font-bold">0.40</span>
+            </div>
+          </div>
+
+          <!-- Extracted Topics -->
+          <div class="p-3 bg-[var(--background,#0f172a)] rounded-xl border border-[var(--border,#334155)] flex items-center gap-2 text-xs">
+            <span class="text-purple-400 font-medium">Extracted Post Topics:</span>
+            <div id="extracted-topics" class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[11px]">food delivery</span>
+              <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[11px]">diwali celebration</span>
+              <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[11px]">discount offer</span>
+              <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[11px]">online payments</span>
+            </div>
+          </div>
+
+          <!-- Real-Time Routing Radar Scores -->
+          <div class="space-y-3 pt-2" id="routing-scores">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- Live Social Feed & Auto-Comments -->
+        <div class="bg-[var(--card,#1e293b)] border border-[var(--border,#334155)] rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Platform Live Feed & Agent Comments</span>
+            <span class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Step 3: LLM Auto-Comments</span>
+          </div>
+
+          <div id="posts-feed" class="space-y-4">
+            <!-- Feed posts inserted here -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== TAB 2: HARDWARE Q&A ASSISTANT ==================== -->
+  <main id="tab-p2" class="hidden space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Left Column: System Inspector & Tool Specifications -->
+      <div class="space-y-5">
+        <div class="bg-[var(--card,#1e293b)] border border-[var(--border,#334155)] rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Machine Hardware State</span>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">ThinkPad X1 Gen 10</span>
+          </div>
+
+          <!-- Hardware Quick Cards -->
+          <div class="space-y-2.5 text-xs">
+            <div class="p-3 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] space-y-1">
+              <div class="flex justify-between font-semibold">
+                <span class="text-cyan-300">Memory (RAM)</span>
+                <span class="text-emerald-400">16 GB / 64 GB Max</span>
+              </div>
+              <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">1 of 2 SODIMM slots in use • 1 Slot Available</div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] space-y-1">
+              <div class="flex justify-between font-semibold">
+                <span class="text-cyan-300">Storage (SSD)</span>
+                <span class="text-emerald-400">NVMe 1.0 TB</span>
+              </div>
+              <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Samsung 980 PRO • 3 Partitions (/boot, /boot/efi, /)</div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] space-y-1">
+              <div class="flex justify-between font-semibold">
+                <span class="text-cyan-300">CPU / Processor</span>
+                <span class="text-emerald-400">i7-1260P</span>
+              </div>
+              <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">12 Cores (16 Threads) • Max 4.70 GHz • x86_64</div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] space-y-1">
+              <div class="flex justify-between font-semibold">
+                <span class="text-cyan-300">Graphics (Hybrid)</span>
+                <span class="text-emerald-400">Dual GPUs</span>
+              </div>
+              <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Intel Iris Xe (i915) + NVIDIA RTX 3050 (nvidia)</div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] space-y-1">
+              <div class="flex justify-between font-semibold">
+                <span class="text-cyan-300">Battery</span>
+                <span class="text-emerald-400">88% (95% Health)</span>
+              </div>
+              <div class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Discharging • 57 Wh / 60 Wh design</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Safe Allow-List Guardrails Card -->
+        <div class="bg-[var(--card,#1e293b)] border border-[var(--border,#334155)] rounded-2xl p-5 shadow-sm space-y-3">
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">🛡️ Safety & Permission Guardrails</span>
+          <ul class="text-xs text-[var(--muted-foreground,#94a3b8)] space-y-2">
+            <li class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✓</span> Strictly allow-listed commands (<code>lscpu</code>, <code>lsblk</code>, <code>dmidecode</code>)</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✓</span> <code>shell=False</code> — zero shell injection or arbitrary bash</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✓</span> Non-root dmidecode fallback without crashing</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-400 font-bold">✓</span> 100% grounded facts to prevent hallucinated specs</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Chat Interface -->
+      <div class="lg:col-span-2 bg-[var(--card,#1e293b)] border border-[var(--border,#334155)] rounded-2xl p-5 shadow-sm flex flex-col h-[640px]">
+        
+        <!-- Chat Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-[var(--border,#334155)] mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🐧</span>
+            <span class="text-xs font-bold text-cyan-400">Hardware Q&A Assistant</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">Try sample:</span>
+            <button onclick="askQuestion('Can I add more RAM, and how much?')" class="text-[11px] px-2 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 rounded-md border border-cyan-500/20">RAM Upgrade?</button>
+            <button onclick="askQuestion('Is my SSD NVMe?')" class="text-[11px] px-2 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 rounded-md border border-cyan-500/20">NVMe?</button>
+            <button onclick="askQuestion('and what about the GPU?')" class="text-[11px] px-2 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 rounded-md border border-cyan-500/20">GPU?</button>
+          </div>
+        </div>
+
+        <!-- Chat History -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
+          <!-- Welcome message -->
+          <div class="p-3 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] space-y-1">
+            <div class="font-semibold text-cyan-400">Hardware Assistant 🐧</div>
+            <div class="text-[var(--foreground,#f8fafc)] leading-relaxed">
+              Hello! I'm your local Linux hardware assistant. I inspect your system tools directly rather than guessing. What would you like to know about your laptop?
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Bar -->
+        <div class="pt-3 border-t border-[var(--border,#334155)] mt-3">
+          <form onsubmit="handleChatSubmit(event)" class="flex gap-2">
+            <input id="chat-input" type="text" placeholder="Ask a question (e.g. 'Can I add more RAM, and how much?')..." class="flex-1 bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] rounded-xl px-4 py-2.5 text-xs text-[var(--foreground,#f8fafc)] focus:outline-none focus:border-cyan-500" />
+            <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-cyan-500/20 transition">
+              Ask
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Tab switching
+    function switchTab(tabId) {
+      const p1 = document.getElementById('tab-p1');
+      const p2 = document.getElementById('tab-p2');
+      const btn1 = document.getElementById('tab-btn-p1');
+      const btn2 = document.getElementById('tab-btn-p2');
+
+      if (tabId === 'p1') {
+        p1.classList.remove('hidden');
+        p2.classList.add('hidden');
+        btn1.className = "px-4 py-1.5 rounded-lg bg-blue-600 text-white shadow transition-all";
+        btn2.className = "px-4 py-1.5 rounded-lg text-[var(--muted-foreground,#94a3b8)] hover:text-white transition-all";
+      } else {
+        p1.classList.add('hidden');
+        p2.classList.remove('hidden');
+        btn2.className = "px-4 py-1.5 rounded-lg bg-cyan-600 text-white shadow transition-all";
+        btn1.className = "px-4 py-1.5 rounded-lg text-[var(--muted-foreground,#94a3b8)] hover:text-white transition-all";
+      }
+    }
+
+    // --- TAB 1 LOGIC: AGENT SOCIAL NETWORK ---
+    const agentsData = {
+      swiggy: { name: "Swiggy", icon: "🍔", color: "orange" },
+      phonepe: { name: "PhonePe", icon: "💳", color: "indigo" },
+      hdfc: { name: "HDFC Bank", icon: "🏦", color: "blue" },
+      flipkart: { name: "Flipkart", icon: "🛍️", color: "yellow" },
+      bajaj: { name: "Bajaj Auto", icon: "🏍️", color: "cyan" }
+    };
+
+    function loadSamplePreset(preset) {
+      if (preset === 'diwali') {
+        document.getElementById('poster-select').value = 'swiggy';
+        document.getElementById('post-content').value = "🎉 Diwali Special: Get 5% off on all Swiggy deliveries today! Order your favorite meals and celebrate the festival of lights. Valid till midnight.";
+        document.getElementById('post-tags').value = "diwali, offer, food, delivery, festival";
+      } else {
+        document.getElementById('poster-select').value = 'flipkart';
+        document.getElementById('post-content').value = "🔥 Big Billion Days are HERE! Up to 80% off on Smartphones, Laptops, and Festive electronics. Extra bank discounts apply!";
+        document.getElementById('post-tags').value = "sale, electronics, discounts, bigbilliondays";
+      }
+    }
+
+    function publishPost() {
+      const posterKey = document.getElementById('poster-select').value;
+      const content = document.getElementById('post-content').value.trim();
+      const tags = document.getElementById('post-tags').value;
+      const poster = agentsData[posterKey];
+
+      if (!content) return;
+
+      // Compute dynamic simulated relevance scores based on poster and content
+      let scores = [];
+      let autoComments = [];
+
+      if (posterKey === 'swiggy') {
+        scores = [
+          { agent: 'phonepe', score: 0.88, reason: "Payments & UPI directly tie into delivery checkouts and festive cashbacks." },
+          { agent: 'hdfc', score: 0.74, reason: "Card offers and festive shopping rewards pair with food delivery." },
+          { agent: 'flipkart', score: 0.42, reason: "Both run festive campaigns; mild consumer overlap." },
+          { agent: 'bajaj', score: 0.12, reason: "Automotive manufacturing has zero synergy with food delivery discounts." }
+        ];
+        autoComments = [
+          { agent: 'phonepe', text: "Extra ₹50 cashback when you pay for Swiggy Diwali orders using PhonePe UPI! Celebrate with savings! 🎆" },
+          { agent: 'hdfc', text: "Get an instant 10% discount up to ₹100 using your HDFC Millennia Credit Card on Swiggy today." }
+        ];
+      } else if (posterKey === 'flipkart') {
+        scores = [
+          { agent: 'hdfc', score: 0.92, reason: "High-ticket electronics sales drive credit card EMI and instant discounts." },
+          { agent: 'phonepe', score: 0.85, reason: "UPI payment gateway and wallet checkout synergies for e-commerce." },
+          { agent: 'swiggy', score: 0.38, reason: "General festive retail synergy; falls below notification threshold." },
+          { agent: 'bajaj', score: 0.15, reason: "Irrelevant consumer electronics focus vs commercial auto manufacturing." }
+        ];
+        autoComments = [
+          { agent: 'hdfc', text: "Extra 10% instant discount + No Cost EMI on HDFC Bank Credit & Debit Cards across all Big Billion Days deals!" },
+          { agent: 'phonepe', text: "Link your RuPay Credit Card on PhonePe for seamless 1-click checkout during the sale." }
+        ];
+      } else {
+        scores = [
+          { agent: 'phonepe', score: 0.65, reason: "Fintech payment rail integration." },
+          { agent: 'swiggy', score: 0.52, reason: "Promotional delivery synergy." },
+          { agent: 'flipkart', score: 0.48, reason: "Merchant co-marketing." },
+          { agent: 'bajaj', score: 0.18, reason: "Minimal overlap." }
+        ];
+        autoComments = [
+          { agent: 'phonepe', text: "Great initiative! Let's provide seamless digital payments for this campaign." }
+        ];
+      }
+
+      // Render Relevance Scores Radar
+      renderRoutingScores(scores);
+
+      // Render Feed Post with Auto-comments
+      renderFeedPost(poster, content, autoComments);
+    }
+
+    function renderRoutingScores(scores) {
+      const container = document.getElementById('routing-scores');
+      container.innerHTML = "";
+
+      scores.forEach(item => {
+        const ag = agentsData[item.agent];
+        const isNotified = item.score >= 0.40;
+        const barColor = isNotified ? 'bg-gradient-to-r from-blue-500 to-emerald-400' : 'bg-red-500/40';
+        const statusBadge = isNotified 
+          ? `<span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">✓ NOTIFIED</span>`
+          : `<span class="px-2 py-0.5 rounded text-[10px] bg-red-500/10 text-red-400 border border-red-500/20 font-medium">✕ FILTERED</span>`;
+
+        const row = document.createElement('div');
+        row.className = "p-3 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] space-y-1.5";
+        row.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">${ag.icon}</span>
+              <span class="font-semibold text-xs">${ag.name}</span>
+              ${statusBadge}
+            </div>
+            <span class="font-mono text-xs font-bold ${isNotified ? 'text-emerald-400' : 'text-[var(--muted-foreground,#94a3b8)]'}">${(item.score * 100).toFixed(0)}% (${item.score.toFixed(2)})</span>
+          </div>
+          <div class="w-full bg-[var(--card,#1e293b)] h-2 rounded-full overflow-hidden">
+            <div class="${barColor} h-full transition-all duration-700" style="width: ${item.score * 100}%"></div>
+          </div>
+          <p class="text-[11px] text-[var(--muted-foreground,#94a3b8)]">${item.reason}</p>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function renderFeedPost(poster, content, comments) {
+      const feed = document.getElementById('posts-feed');
+      const postCard = document.createElement('div');
+      postCard.className = "p-4 rounded-xl bg-[var(--background,#0f172a)] border border-[var(--border,#334155)] space-y-3";
+
+      let commentsHtml = "";
+      comments.forEach(c => {
+        const commAgent = agentsData[c.agent];
+        commentsHtml += `
+          <div class="pl-3 py-2 border-l-2 border-indigo-500 bg-[var(--card,#1e293b)]/40 rounded-r-lg space-y-1">
+            <div class="flex items-center gap-1.5 font-semibold text-[11px] text-indigo-400">
+              <span>${commAgent.icon}</span>
+              <span>${commAgent.name} (Auto-Comment)</span>
+              <span class="text-[10px] text-[var(--muted-foreground,#94a3b8)] font-normal ml-auto">via Gemini</span>
+            </div>
+            <p class="text-xs text-[var(--foreground,#f8fafc)]">${c.text}</p>
+          </div>
+        `;
+      });
+
+      postCard.innerHTML = `
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-[var(--card,#1e293b)] border border-[var(--border,#334155)] flex items-center justify-center text-sm">
+            ${poster.icon}
+          </div>
+          <div>
+            <div class="font-bold text-xs">${poster.name} Agent</div>
+            <div class="text-[10px] text-[var(--muted-foreground,#94a3b8)]">Just now • Published publicly</div>
+          </div>
+        </div>
+        <p class="text-xs text-[var(--foreground,#f8fafc)] leading-relaxed">${content}</p>
+        <div class="pt-2 border-t border-[var(--border,#334155)] space-y-2">
+          <div class="text-[11px] font-semibold text-[var(--muted-foreground,#94a3b8)]">Automated Agent Responses (${comments.length})</div>
+          ${commentsHtml}
+        </div>
+      `;
+
+      feed.prepend(postCard);
+    }
+
+    // --- TAB 2 LOGIC: HARDWARE ASSISTANT ---
+    function askQuestion(q) {
+      document.getElementById('chat-input').value = q;
+      handleChatSubmit(new Event('submit'));
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const question = input.value.trim();
+      if (!question) return;
+
+      appendChatMessage('user', question);
+      input.value = "";
+
+      // Simulate Assistant Reasoning & Tool Execution
+      setTimeout(() => {
+        generateHardwareAnswer(question);
+      }, 400);
+    }
+
+    function appendChatMessage(role, text, toolUsed = null) {
+      const container = document.getElementById('chat-messages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = "p-3 rounded-xl border space-y-1.5 text-xs animate-fadeIn";
+
+      if (role === 'user') {
+        msgDiv.className += " bg-blue-900/20 border-blue-500/30 text-blue-100 ml-8";
+        msgDiv.innerHTML = `<div class="font-semibold text-blue-400">User</div><div>${text}</div>`;
+      } else {
+        msgDiv.className += " bg-[var(--background,#0f172a)] border-[var(--border,#334155)] mr-8";
+        let toolBadge = toolUsed ? `<div class="text-[11px] font-mono text-cyan-400 flex items-center gap-1.5 mb-1"><span class="animate-spin">⚙️</span> Tool Called: <code>${toolUsed}</code></div>` : '';
+        msgDiv.innerHTML = `
+          ${toolBadge}
+          <div class="font-semibold text-cyan-400">Hardware Assistant 🐧</div>
+          <div class="text-[var(--foreground,#f8fafc)] leading-relaxed space-y-1">${text}</div>
+        `;
+      }
+
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function generateHardwareAnswer(q) {
+      const lower = q.toLowerCase();
+
+      if (lower.includes('ram') || lower.includes('memory') || lower.includes('slot')) {
+        appendChatMessage('assistant', `
+          You have <strong>15.79 GiB (16 GB)</strong> installed in <strong>1 of 2 slots</strong>.<br/>
+          • <strong>Motherboard Maximum:</strong> Up to <strong>64 GB</strong>.<br/>
+          • <strong>Available Slots:</strong> 1 free SODIMM slot.<br/>
+          • <strong>Upgrade Recommendation:</strong> You can add a stick of up to <strong>32 GB</strong> (or 48 GB) to reach 48 GB or 64 GB.
+        `, 'inspect_memory()');
+      } else if (lower.includes('ssd') || lower.includes('nvme') || lower.includes('storage') || lower.includes('disk')) {
+        appendChatMessage('assistant', `
+          <strong>Yes</strong>, your primary storage is an <strong>NVMe SSD</strong>:<br/>
+          • <strong>Model:</strong> Samsung SSD 980 PRO 1TB (931.51 GiB)<br/>
+          • <strong>Bus:</strong> NVMe (PCIe Gen 4.0 x4)<br/>
+          • <strong>Partitions:</strong> 3 active partitions (EFI, boot, root /)
+        `, 'inspect_storage()');
+      } else if (lower.includes('gpu') || lower.includes('graphics')) {
+        appendChatMessage('assistant', `
+          Your laptop has a <strong>hybrid dual-GPU</strong> configuration:<br/>
+          • <strong>Integrated:</strong> Intel Alder Lake-P Iris Xe Controller (Driver: <code>i915</code>)<br/>
+          • <strong>Dedicated:</strong> NVIDIA GeForce RTX 3050 Mobile (Driver: <code>nvidia</code>)
+        `, 'inspect_gpu()');
+      } else if (lower.includes('battery')) {
+        appendChatMessage('assistant', `
+          <strong>Battery Status:</strong> 88% (Discharging)<br/>
+          • <strong>Health:</strong> <strong>95.0%</strong> (57 Wh capacity remaining vs 60 Wh design).
+        `, 'inspect_battery()');
+      } else {
+        appendChatMessage('assistant', `
+          Your CPU is an <strong>12th Gen Intel Core i7-1260P</strong> with <strong>12 physical cores (16 threads)</strong> boosting up to 4.70 GHz.
+        `, 'inspect_cpu()');
+      }
+    }
+
+    // Initialize with sample run
+    publishPost();
+  </script>
+</body>
+</html>
